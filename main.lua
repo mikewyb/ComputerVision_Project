@@ -67,6 +67,19 @@ end
 local train_dataset = load_dataset("train")
 local test_dataset = load_dataset("test")
 
-print(train_dataset:get(1))
+local sample = train_dataset:get(2)
+--print(table1)
+for k, v in pairs(sample) do
+    sample = v
+    --each table only contains one set of key/value
+    break
+end
+
+local content = sample.table.content
+local filename = sample.table.filename
+
+print(content)
+
+--print(train_dataset:size())
 
 
