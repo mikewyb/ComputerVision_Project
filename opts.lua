@@ -3,10 +3,11 @@ local M = {}
 function M.parse(arg)
     local cmd = torch.CmdLine();
     cmd:text()
-    cmd:text('The German Traffic Sign Recognition Benchmark: A multi-class classification ')
+    cmd:text('Predicting the next move of playing Go: A multi-class classification ')
     cmd:text()
     cmd:text('Options:')
-    cmd:option('-data',             './dataset',    'Path to dataset')
+    cmd:option('-path',             './dataset',    'Path to dataset')
+    cmd:option('-datasource',       'kgs',          'Data source')
     --cmd:option('-val',              10,             'Percentage to use for validation set')
     cmd:option('-nEpochs',          256,            'Maximum epochs')
     cmd:option('-batchsize',        128,            'Batch size for epochs')
@@ -25,11 +26,11 @@ function M.parse(arg)
 
     local opt = cmd:parse(arg or {})
 
-    if opt.model == '' or not paths.filep('models/'..opt.model..'.lua') then
-        cmd:error('Invalid model ' .. opt.model)
-    end
+    --if opt.model == '' or not paths.filep('models/'..opt.model..'.lua') then
+    --    cmd:error('Invalid model ' .. opt.model)
+    --end
 
-    if opt.nThread == nil then
+    if opt.nThreads == nil then
 	cmd:error("opt.nthread cannot be nil")
     end
 

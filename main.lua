@@ -1,8 +1,10 @@
 require 'torch'
 
-local opt = require 'opts'
+local optParser = require 'opts'
+local opt = optParser.parse(arg)
 local tnt = require 'torchnet'
 
+--[[
 --from train.lua
 local load_closure = function(thread_idx, partition, epoch_size, fm_init, fm_generator, fm_postprocess, bundle, opt)
     local tnt = require 'torchnet'
@@ -18,15 +20,6 @@ local load_closure = function(thread_idx, partition, epoch_size, fm_init, fm_gen
         bundle = bundle,
         epoch_size = epoch_size,
         opt = opt
-    }
-end
-
---from infra/framewor.lua
-local function load_dataset(partition)
-    return tnt.IndexedDataset{
-    	fields = { opt.datasource .. "_" .. partition },
-    	--path = './dataset'
-    	path = opt.path
     }
 end
 
@@ -59,9 +52,21 @@ local function build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundl
     end
     return dataset
 end
+--]]
+
+--from infra/framewor.lua
+local function load_dataset(partition)
+    return tnt.IndexedDataset{
+    	fields = { opt.datasource .. "_" .. partition },
+    	--path = './dataset'
+    	path = opt.path
+    }
+end
 
 -- training/test set, already a iterator
 local train_dataset = load_dataset("train")
 local test_dataset = load_dataset("test")
+
+print(train_dataset:get(1))
 
 
