@@ -2,7 +2,9 @@ require 'torch'
 
 local optParser = require 'opts'
 local opt = optParser.parse(arg)
+
 local tnt = require 'torchnet'
+local sgfloader = require 'utils.sgf'
 
 --[[
 --from train.lua
@@ -67,8 +69,9 @@ end
 local train_dataset = load_dataset("train")
 local test_dataset = load_dataset("test")
 
-local sample = train_dataset:get(2)
---print(table1)
+-- get sample from train dataset
+local sample = train_dataset:get(1)
+--print(sample)
 for k, v in pairs(sample) do
     sample = v
     --each table only contains one set of key/value
@@ -78,8 +81,10 @@ end
 local content = sample.table.content
 local filename = sample.table.filename
 
-print(content)
+print(content:storage():string())
 
---print(train_dataset:size())
+game = sgfloader.parse(content:storage():string(), filename)
+
+
 
 
