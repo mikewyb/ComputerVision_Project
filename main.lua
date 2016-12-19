@@ -1,7 +1,9 @@
-
+require 'torch'
 
 local opt = require 'opts'
+local tnt = require 'torchnet'
 
+--from train.lua
 local load_closure = function(thread_idx, partition, epoch_size, fm_init, fm_generator, fm_postprocess, bundle, opt)
     local tnt = require 'torchnet'
     local rl = require 'train.rl_framework.infra.env'
@@ -19,7 +21,16 @@ local load_closure = function(thread_idx, partition, epoch_size, fm_init, fm_gen
     }
 end
 
+--from infra/framewor.lua
+local function load_dataset(partition)
+    return tnt.IndexedDataset{
+    	fields = { opt.datasource .. "_" .. partition },
+    	--path = './dataset'
+    	path = opt.path
+    }
+end
 
+--from train.lua
 local function build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundle, partition, epoch_size, opt)
     local dataset
     if opt.nthread > 0 then
@@ -49,16 +60,8 @@ local function build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundl
     return dataset
 end
 
-if opt.nthread == nil then error("opt.nthread cannot be nil") end
-if not opt.batchsize then error("opt.batchsize cannot be nil") end
-
--- training/test set
-local train_dataset = build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundle, "train", opt.epoch_size, opt)
-local test_dataset = build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundle, "test", opt.epoch_size_test, opt)
+-- training/test set, already a iterator
+local train_dataset = load_dataset("train")
+local test_dataset = load_dataset("test")
 
 
-local tnt = require 'torchnet'
-return tnt.IndexedDataset{
-    fields = { opt.datasource .. "_" .. partition },
-    path = './dataset'
-}

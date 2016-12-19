@@ -29,6 +29,14 @@ function M.parse(arg)
         cmd:error('Invalid model ' .. opt.model)
     end
 
+    if opt.nThread == nil then
+	cmd:error("opt.nthread cannot be nil")
+    end
+
+    if not opt.batchsize then
+	cmd:error("opt.batchsize cannot be nil")
+    end
+
     return opt
 end
 
