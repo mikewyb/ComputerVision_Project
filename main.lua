@@ -2,10 +2,11 @@ require 'torch'
 
 local optParser = require 'opts'
 local opt = optParser.parse(arg)
-
 local tnt = require 'torchnet'
 local sgfloader = require 'utils.sgf'
-
+local board = require 'board.board'
+local common = require 'common.common'
+local goutils = require 'utils.goutils'
 --[[
 --from train.lua
 local load_closure = function(thread_idx, partition, epoch_size, fm_init, fm_generator, fm_postprocess, bundle, opt)
@@ -56,6 +57,16 @@ local function build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundl
 end
 --]]
 
+local function protected_play(b, game)
+    local x, y, player = sgfloader.parse_move(game:play_current(), false)
+    if player ~= nil and board.play(b, x, y, player) then
+        game:play_next()
+        return true
+    else
+        return false
+    end
+end
+
 --from infra/framewor.lua
 local function load_dataset(partition)
     return tnt.IndexedDataset{
@@ -69,22 +80,50 @@ end
 local train_dataset = load_dataset("train")
 local test_dataset = load_dataset("test")
 
--- get sample from train dataset
+print(train_dataset:get(1))
 local sample = train_dataset:get(1)
---print(sample)
+print(sample.table)
+
+sample_idx = math.random(train_dataset:size())
+local sample = train_dataset:get(sample_idx)
 for k, v in pairs(sample) do
     sample = v
-    --each table only contains one set of key/value
     break
 end
 
 local content = sample.table.content
 local filename = sample.table.filename
 
-print(content:storage():string())
+b = board.new()
 
 game = sgfloader.parse(content:storage():string(), filename)
+print(content:storage():string())
+print(sgfloader.show_move(game))
+print(game:num_round())
 
+--[[
+local nstep = 3
+for i = 1, nstep do
+	local x1, y1, player = sgfloader.parse_move(game:play_current(i - 1), false)
+	print(x1)
+	print(y1)
+	print(player)
+end
+--]]
 
+if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
+    board.clear(b)
+    goutils.apply_handicaps(b, game)
 
+    local game_play_through = true
+    local round = math.random(game:num_round()) - 1
+    for j = 1, round do
+		--print(game)
+		print("---------------------------------------------------------")
+		print(board.show(b, "all"))
+    	if not protected_play(b, game) then
+       		break
+      	end
+  	end
+ end
 
