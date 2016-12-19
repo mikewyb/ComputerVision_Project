@@ -59,8 +59,17 @@ end
 
 local function protected_play(b, game)
     local x, y, player = sgfloader.parse_move(game:play_current(), false)
+	
     if player ~= nil and board.play(b, x, y, player) then
         game:play_next()
+		print("---------------------------------------------------------")
+		print(player)
+		print(board.show(b, "all"))				
+		local opt = {}
+		opt.userank = false
+		opt.feature_type = "complete"
+		local feature = goutils.extract_feature(b, player, opt, rank, 'test');
+		print(feature:size())
         return true
     else
         return false
@@ -119,9 +128,7 @@ if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_siz
     local round = math.random(game:num_round()) - 1
     for j = 1, round do
 		--print(game)
-		print("---------------------------------------------------------")
-		print(board.show(b, "all"))
-    	if not protected_play(b, game) then
+		if not protected_play(b, game) then
        		break
       	end
   	end
