@@ -28,6 +28,9 @@ local framework = require 'train.rl_framework.infra.framework'
 local rl = require 'train.rl_framework.infra.env'
 local pl = require 'pl.import_into'()
 
+local apply_random_moves = true
+local min_random_moves = 30
+local max_random_moves = 50
 require 'train.rl_framework.infra.bundle'
 require 'train.rl_framework.infra.agent'
 
@@ -116,6 +119,8 @@ local function get_sa(b, game, sample_idx, info)
 end
 
 local function load_random_game(sample_idx, dataset, game, b)
+	print("load game")
+
     while true do
         local sample = dataset:get(sample_idx)
         for k, v in pairs(sample) do
@@ -129,10 +134,18 @@ local function load_random_game(sample_idx, dataset, game, b)
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
-
+			print("------------play-------------")
             local game_play_through = true
             if apply_random_moves then
                 local round = math.random(game:num_round()) - 1
+				if round < min_random_moves then
+					round = min_random_moves
+				end
+				if round > max_random_moves then
+					round = max_random_moves
+				end								
+				--print(round)
+                
                 for j = 1, round do
                     if not protected_play(b, game) then
                         game_play_through = false
@@ -163,7 +176,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
 	
     repeat
     if game_restarted or game:play_get_ply() >= game:play_get_maxply() - nstep + 1 then
-        b, game = load_random_game(sample_idx, dataset)
+        game, b = load_random_game(sample_idx, dataset, game, b)
         game_restarted = false
     else
         if not protected_play(b, game) then
