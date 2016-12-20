@@ -219,7 +219,8 @@ function framework.run_rl(agent, callbacks, opt)
     end
 
     function engine.hooks.onSample(state)
-        nnutils.send2gpu(state.sample, memongpu)
+        --TODOWMD
+        --nnutils.send2gpu(state.sample, memongpu)
         if callbacks.onSample then callbacks.onSample(state) end
         if opt.debug then
             require 'fb.debugger'.enter()
