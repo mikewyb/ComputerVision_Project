@@ -143,7 +143,7 @@ function framework.run_rl(agent, callbacks, opt)
     local train_dataset = build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundle, "train", opt.epoch_size, opt)
     local test_dataset = build_dataset(thread_init, fm_init, fm_gen, fm_postprocess, bundle, "test", opt.epoch_size_test, opt)
 
-    if not callbacks.checkpoint_filename then
+    if not callbacks.checkpoint_filename and opt.nGPU > 0 then
         callbacks.checkpoint_filename = function(state, err)
             local gpu = cutorch.getDevice()
             return string.format("model-g%d_iter%d_%f.bin", gpu, state.epoch, err)

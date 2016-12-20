@@ -8,7 +8,7 @@
 --
 
 require 'torch'
-require 'cutorch'
+--require 'cutorch'
 require 'nn'
 --require 'cunn'
 --require 'cudnn'
