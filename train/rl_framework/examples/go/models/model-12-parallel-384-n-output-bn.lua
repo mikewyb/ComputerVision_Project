@@ -1,3 +1,4 @@
+require 'nn'
 local pl = require('pl.import_into')()
 local nnutils = require 'utils.nnutils'
 require 'train.rl_framework.examples.go.ParallelCriterion2'
@@ -65,7 +66,6 @@ return function(inputdim, config)
 
     local net, outputdim = nnutils.make_network(get_network_spec(config.nstep), inputdim)
     if config.nGPU>1 then
-        require 'nn'
         require 'cudnn'
         require 'cutorch'
         assert(config.nGPU <= cutorch.getDeviceCount(), 'number of GPUs less than config.nGPU specified')

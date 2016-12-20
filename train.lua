@@ -8,12 +8,8 @@
 --
 
 require 'torch'
-require 'cutorch'
 require 'nn'
-require 'cunn'
-require 'cudnn'
 require 'nngraph'
-
 require 'xlua'
 
 local framework = require 'train.rl_framework.infra.framework'
@@ -31,7 +27,13 @@ local tnt = require 'torchnet'
 function build_policy_model(opt)
     local network_maker = require('train.rl_framework.examples.go.models.' .. opt.model_name)
     local network, crit, outputdim, monitor_list = network_maker({1, 25, 19, 19}, opt)
-    return network:cuda(), crit:cuda()
+    if opt.nGPU > 1 then
+        require 'cutorch'
+        require 'cunn'
+        require 'cudnn'
+        return network:cuda(), crit:cuda()
+    end
+    return network, crit
 end
 
 local opt = pl.lapp[[
@@ -40,7 +42,7 @@ local opt = pl.lapp[[
     --optim          (default "supervised")
     --loss           (default 'policy')
     --alpha          (default 0.1)
-    --nthread        (default 8)
+    --nthread        (default 0)
     --batchsize      (default 256)
     --num_forward_models  (default 4096)       Number of forward models.
     --progress                                 Whether to print the progress
@@ -48,7 +50,7 @@ local opt = pl.lapp[[
     --epoch_size_test     (default 128000)      Epoch size for test.
     --data_augmentation                        Whether to use data_augmentation
 
-    --nGPU                (default 1)          Number of GPUs to use.
+    --nGPU                (default 0)          Number of GPUs to use.
     --nstep               (default 3)          Number of steps.
     --model_name          (default 'model-12-parallel-384-n-output-bn')
     --datasource          (default 'kgs')
@@ -122,7 +124,6 @@ local callbacks = {
         end
         ]]
     end,
-    --[[
     onStartEpoch = function()
         print("In onStartEpoch")
     end,
@@ -138,7 +139,6 @@ local callbacks = {
     onEndEpoch = function()
         print("In onEndEpoch")
     end
-    ]]
 }
 
 -- callbacks:
