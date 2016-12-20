@@ -229,20 +229,7 @@ function Bundle:backward_prepare(input, attrs)
         -- Prepare the backpropagation depending on the type.
         -- Also prepare the error.
         local grads, errs
-        if k == 'q' then
-            -- Q-network, we create gradient.
-            grads = this_output:clone():zero()
-            errs = this_output.new():resize(batchsize)
-            local a = v[1]
-            local t = v[2]
-
-            -- Loop over batchsize.
-            for i = 1, batchsize do
-                local g = this_output[i][a[i]] - t[i]
-                errs[i] = g*g
-                grads[i][a[i]] = g
-            end
-        elseif k == 'policy' then
+        if k == 'policy' then
             -- Use CrossEntropy to compute the gradient.
             errs = self.crits:forward(this_model.output, v)
 
