@@ -379,4 +379,21 @@ function nnutils.send2gpu(sample, buf)
     end
 end
 
+-- buf as the table that holds all newly allocated memories.
+function nnutils.send2cpu(sample, buf)
+    for k, v in pairs(sample) do
+        if torch.typename(v) and torch.typename(v):match("torch%..*Tensor") then
+            if not buf[k] then
+                buf[k] = torch.Tensor()
+            end
+            v = v:squeeze()
+            buf[k]:resize(v:size()):copy(v)
+            sample[k] = buf[k]
+        elseif type(v) == 'table' then
+            buf[k] = { }
+            nnutils.send2cpu(v, buf[k])
+        end
+    end
+end
+
 return nnutils
