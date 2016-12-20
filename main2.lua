@@ -44,7 +44,7 @@ local opt = pl.lapp[[
     --loss           (default 'policy')
     --alpha          (default 0.1)
     --nthread        (default 0)
-    --batchsize      (default 5)
+    --batchsize      (default 1)
     --num_forward_models  (default 4096)       Number of forward models.
     --progress                                 Whether to print the progress
     --nEpochs             (default 1)      Epoch size
@@ -133,7 +133,7 @@ local function get_sa(b, game, sample_idx, info, nstep)
         xys[i][2] = y_rot
     end
 
-    return feature, moves[1], xys[1], game.ply
+    return feature, moves, xys, game.ply
     --[[
     return {
         s = feature,
@@ -161,7 +161,7 @@ local function load_random_game(sample_idx, dataset, game, b)
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
-			print("------------play-------------")
+			--print("------------play-------------")
             local game_play_through = true
             if apply_random_moves then
                 local round = math.random(game:num_round()) - 1
@@ -194,7 +194,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     local move_counter = 1
     -- set range for move
     local max_move_counter = 100
-    local nstep = 2
+    local nstep = 1
     local game_restarted = false
     local b = board.new()
     local game
