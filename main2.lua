@@ -31,7 +31,7 @@ local pl = require 'pl.import_into'()
 require 'train.rl_framework.infra.bundle'
 require 'train.rl_framework.infra.agent'
 
-local tnt = require 'torchnet'
+--local tnt = require 'torchnet'
 
 -- cutorch.setDevice(3)
 
@@ -103,7 +103,7 @@ local function get_sa(b, game, sample_idx, info)
         xys[i][2] = y_rot
     end
 
-    return feature, moves[1]
+    return feature, moves[1], xys, game.ply
     --[[
     return {
         s = feature,
@@ -115,9 +115,7 @@ local function get_sa(b, game, sample_idx, info)
     --]]
 end
 
-local function load_random_game(sample_idx, dataset)
-    local game
-    local b = board.new()
+local function load_random_game(sample_idx, dataset, game, b)
     while true do
         local sample = dataset:get(sample_idx)
         for k, v in pairs(sample) do
@@ -147,6 +145,8 @@ local function load_random_game(sample_idx, dataset)
             end
         end
     end
+	--print(board.show(b, "all"))				
+	--print(game)
     return game, b
 end
 
@@ -156,8 +156,11 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     local max_move_counter = 100
     local nstep = 1
     local game_restarted = false
-    b, game = load_random_game(sample_idx, dataset)
+    local b = board.new()
+    local game
 
+    game, b = load_random_game(sample_idx, dataset, game, b)
+	
     repeat
     if game_restarted or game:play_get_ply() >= game:play_get_maxply() - nstep + 1 then
         b, game = load_random_game(sample_idx, dataset)
@@ -186,6 +189,9 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
         end
     end
     until not game_restarted
+
+	print(board.show(b, "all"))				
+	--print(game:show_info())
 
     return get_sa(b, game, sample_idx, info)
 end
@@ -261,11 +267,18 @@ function getTrainSample(train_dataset, idx)
   	    end
     end
     --]]
-    feature, move = randomPlayAndGetFeature(idx, train_dataset, 'train')
+    feature, move, xys, ply = randomPlayAndGetFeature(idx, train_dataset, 'train')
     print("----------- feature ----------")
-    print(feature)
+    --print(feature)
     print("----------- move ----------")
     print(move)
+    print("----------- xys ----------")
+    print(xys)
+    print("----------- ply ----------")
+    print(ply)
+	print("----------- idx ----------")
+	print(idx)
+	return feature, move
 end
 
 function getTrainTraget(dataset, idx)
@@ -315,8 +328,8 @@ trainDataset = tnt.SplitDataset{
         list = torch.range(1, trainLength):long(),
         load = function(idx)
             return {
-                input =  getTrainSample(trainData, idx),
-                target = getTrainLabel(trainData, idx)
+                input, target =  getTrainSample(trainData, idx),
+                --target = getTrainLabel(trainData, idx)
             }
         end
     }
