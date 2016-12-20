@@ -28,9 +28,6 @@ local framework = require 'train.rl_framework.infra.framework'
 local rl = require 'train.rl_framework.infra.env'
 local pl = require 'pl.import_into'()
 
-local apply_random_moves = true
-local min_random_moves = 30
-local max_random_moves = 50
 require 'train.rl_framework.infra.bundle'
 require 'train.rl_framework.infra.agent'
 
@@ -38,6 +35,36 @@ require 'train.rl_framework.infra.agent'
 
 -- cutorch.setDevice(3)
 
+-- TODO: Batchsize 256
+--local
+local opt = pl.lapp[[
+    --actor          (default "policy")
+    --sampling       (default "replay")
+    --optim          (default "supervised")
+    --loss           (default 'policy')
+    --alpha          (default 0.1)
+    --nthread        (default 0)
+    --batchsize      (default 5)
+    --num_forward_models  (default 4096)       Number of forward models.
+    --progress                                 Whether to print the progress
+    --nEpochs             (default 1)      Epoch size
+    --epoch_size_test     (default 1)      Epoch size for test.
+    --data_augmentation                        Whether to use data_augmentation
+
+    --nGPU                (default 0)          Number of GPUs to use.
+    --nstep               (default 3)          Number of steps.
+    --model_name          (default 'model-12-parallel-384-n-output-bn')
+    --datasource          (default 'kgs')
+    --feature_type        (default 'extended')
+    --cuda                (default 'false')
+    --path                (default './dataset')
+    --min_move            (default 30)
+    --max_move            (default 50)
+]]
+
+local apply_random_moves = true
+local min_random_moves = opt.min_move
+local max_random_moves = opt.max_move
 
 local function protected_play(b, game)
     local x, y, player = sgfloader.parse_move(game:play_current(), false)
@@ -50,7 +77,7 @@ local function protected_play(b, game)
 end
 
 -- info: 'train' or 'test'
-local function get_sa(b, game, sample_idx, info)
+local function get_sa(b, game, sample_idx, info, nstep)
     -- Now we have a valid situation, Extract feature for the current game.
     local x, y, player = sgfloader.parse_move(game:play_current())
     local rank
@@ -81,7 +108,7 @@ local function get_sa(b, game, sample_idx, info)
     end
 
     local sample
-    local nstep = 1
+    --local nstep = 1
     local moves = torch.LongTensor(nstep)
     local xys = torch.LongTensor(nstep, 2)
     for i = 1, nstep do
@@ -106,7 +133,7 @@ local function get_sa(b, game, sample_idx, info)
         xys[i][2] = y_rot
     end
 
-    return feature, moves[1], xys, game.ply
+    return feature, moves[1], xys[1], game.ply
     --[[
     return {
         s = feature,
@@ -167,7 +194,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     local move_counter = 1
     -- set range for move
     local max_move_counter = 100
-    local nstep = 1
+    local nstep = 2
     local game_restarted = false
     local b = board.new()
     local game
@@ -206,7 +233,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
 	print(board.show(b, "all"))				
 	--print(game:show_info())
 
-    return get_sa(b, game, sample_idx, info)
+    return get_sa(b, game, sample_idx, info, nstep)
 end
 
 -- Build simple models.
@@ -222,29 +249,6 @@ function build_policy_model(opt)
     return network, crit
 end
 
---local
-local opt = pl.lapp[[
-    --actor          (default "policy")
-    --sampling       (default "replay")
-    --optim          (default "supervised")
-    --loss           (default 'policy')
-    --alpha          (default 0.1)
-    --nthread        (default 0)
-    --batchsize      (default 256)
-    --num_forward_models  (default 4096)       Number of forward models.
-    --progress                                 Whether to print the progress
-    --nEpochs             (default 1)      Epoch size
-    --epoch_size_test     (default 1)      Epoch size for test.
-    --data_augmentation                        Whether to use data_augmentation
-
-    --nGPU                (default 0)          Number of GPUs to use.
-    --nstep               (default 3)          Number of steps.
-    --model_name          (default 'model-12-parallel-384-n-output-bn')
-    --datasource          (default 'kgs')
-    --feature_type        (default 'extended')
-    --cuda                (default 'false')
-    --path                (default './dataset')
-]]
 
 function getTrainSample(train_dataset, idx)
     print("in getTrainSample")
