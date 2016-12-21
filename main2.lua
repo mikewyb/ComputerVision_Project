@@ -239,6 +239,8 @@ end
 function build_policy_model(opt)
     local network_maker = require('models.' .. opt.model_name)
     local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
+    --TODO replace network with another model
+    network = require("./models/model") 
     if opt.nGPU > 1 then
         require 'cutorch'
         require 'cunn'
