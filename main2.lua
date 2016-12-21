@@ -43,7 +43,7 @@ local opt = pl.lapp[[
     --loss           (default 'policy')
     --alpha          (default 0.1)
     --nthread        (default 0)
-    --batchsize      (default 1)
+    --batchsize      (default 128)
     --num_forward_models  (default 4096)       Number of forward models.
     --progress                                 Whether to print the progress
     --nEpochs             (default 1)      Epoch size
@@ -51,7 +51,7 @@ local opt = pl.lapp[[
     --data_augmentation                        Whether to use data_augmentation
 
     --nGPU                (default 0)          Number of GPUs to use.
-    --nstep               (default 3)          Number of steps.
+    --nstep               (default 1)          Number of steps.
     --model_name          (default 'model-12-parallel-384-n-output-bn')
     --datasource          (default 'kgs')
     --feature_type        (default 'extended')
@@ -238,9 +238,9 @@ end
 -- Build simple models.
 function build_policy_model(opt)
     local network_maker = require('models.' .. opt.model_name)
-    local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
+    local _, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
     --TODO replace network with another model
-    --network = require("./models/model") 
+    local network = require("./models/model") 
     if opt.nGPU > 1 then
         require 'cutorch'
         require 'cunn'
@@ -296,7 +296,7 @@ function getTrainSample(train_dataset, idx)
     --print(ply)
 	print("----------- idx ----------")
 	--print(idx)
-	return feature, move
+	return feature, torch.DoubleTensor(19,19) --, move
 end
 
 function getTrainTraget(dataset, idx)
@@ -355,10 +355,12 @@ trainDataset = tnt.SplitDataset{
         list = torch.range(1, trainLength):long(),
         load = function(idx)
             local i, t = getTrainSample(trainData, idx)
-            print("fuck")
+            --print("fuck")
             print(i:size())
+            --print(t)
             return {
                 input = i,
+                --input = torch.DoubleTensor(92,19,19),
                 target = t,
                 --input, target = getTrainSample(trainData, idx),
                 --target = getTrainLabel(trainData, idx)
@@ -383,6 +385,14 @@ testDataset = tnt.ListDataset{
 local model, criterion = build_policy_model(opt)
 print("------------------ model -----------------")
 print(model)
+
+--[[
+iter = getIterator(trainDataset)
+print(iter)
+for sample in iter() do
+    print(sample.input:size())
+end
+--]]
 
 
 local engine = tnt.OptimEngine()
