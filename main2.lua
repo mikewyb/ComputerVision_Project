@@ -397,6 +397,7 @@ local convergeLog = assert(io.open("outputs/".. logName .. "_cvgLog.logs", "w"))
 print("h")
 
 engine.hooks.onStart = function(state)
+    print("In onStart")
     meter:reset()
     clerr:reset()
     timer:reset()
@@ -425,6 +426,7 @@ if opt.cuda == 'true' then
 end
 
 engine.hooks.onForwardCriterion = function(state)
+    print("In onForwardCriterion")
     meter:add(state.criterion.output)
     clerr:add(state.network.output, state.sample.target)
     if opt.verbose == true then
@@ -438,6 +440,7 @@ engine.hooks.onForwardCriterion = function(state)
 end
 
 engine.hooks.onEnd = function(state)
+    print("In engin onEnd")
     print(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f",
     mode, meter:value(), clerr:value{k = 1}, timer:value()))
     convergeLog:write(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f\n",
@@ -447,7 +450,8 @@ end
 local epoch = 1
 
 while epoch <= opt.nEpochs do
-    print("h")
+    print("epoch:")
+    print(epoch)
 
     trainDataset:select('train')
     engine:train{
@@ -485,6 +489,7 @@ batch = 1
 --  file that has to be uploaded in kaggle.
 --]]
 engine.hooks.onForward = function(state)
+    print("In engin onforward")
     local fileNames  = state.sample.sampleId
     local _, pred = state.network.output:max(2)
     pred = pred - 1
@@ -510,6 +515,7 @@ if opt.cuda == 'true' then
 end
 
 engine.hooks.onEnd = function(state)
+    print("In engin onEnd")
     --submission:close()
     convergeLog:close()
 end
