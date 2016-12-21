@@ -229,7 +229,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     end
     until not game_restarted
 
-	print(board.show(b, "all"))				
+	--print(board.show(b, "all"))				
 	--print(game:show_info())
 
     return get_sa(b, game, sample_idx, info, nstep)
@@ -240,7 +240,7 @@ function build_policy_model(opt)
     local network_maker = require('models.' .. opt.model_name)
     local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
     --TODO replace network with another model
-    network = require("./models/model") 
+    --network = require("./models/model") 
     if opt.nGPU > 1 then
         require 'cutorch'
         require 'cunn'
@@ -289,13 +289,13 @@ function getTrainSample(train_dataset, idx)
     print("----------- feature ----------")
     --print(feature)
     print("----------- move ----------")
-    print(move)
+    --print(move)
     print("----------- xys ----------")
-    print(xys)
+    --print(xys)
     print("----------- ply ----------")
-    print(ply)
+    --print(ply)
 	print("----------- idx ----------")
-	print(idx)
+	--print(idx)
 	return feature, move
 end
 
@@ -303,8 +303,20 @@ function getTrainTraget(dataset, idx)
     print("in getTrainTraget")
 end
 
-function getTestSample(dataset, idx)
+function getTestSample(test_dataset, idx)
     print("in getTestSample")
+    feature, move, xys, ply = randomPlayAndGetFeature(idx, test_dataset, 'test')
+    print("----------- feature ----------")
+    --print(feature)
+    print("----------- move ----------")
+    --print(move)
+    print("----------- xys ----------")
+    --print(xys)
+    print("----------- ply ----------")
+    --print(ply)
+	print("----------- idx ----------")
+	--print(idx)
+	return feature, move
 end
 
 function getTestLabel(dataset, idx)
@@ -342,20 +354,28 @@ trainDataset = tnt.SplitDataset{
     dataset = tnt.ListDataset{
         list = torch.range(1, trainLength):long(),
         load = function(idx)
+            local i, t = getTrainSample(trainData, idx)
+            print("fuck")
+            print(i:size())
             return {
-                input, target =  getTrainSample(trainData, idx),
+                input = i,
+                target = t,
+                --input, target = getTrainSample(trainData, idx),
                 --target = getTrainLabel(trainData, idx)
             }
         end
     }
 }
 
+
 testDataset = tnt.ListDataset{
     list = torch.range(1, testLength):long(),
     load = function(idx)
+        local i, s = getTestSample(testData, idx)
         return {
-            input = getTestSample(testData, idx),
-            sampleId = getTestLabel(testData, idx)
+            input = i, 
+            sampleId = s,
+            --sampleId = getTestLabel(testData, idx)
         }
     end
 }

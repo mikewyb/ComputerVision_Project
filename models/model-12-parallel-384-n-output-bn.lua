@@ -92,10 +92,10 @@ return function(inputdim, config)
     -- Use self-defined parallel criterion 2, which can handle targets of the format nbatch * #target
     local criterions = nn.ParallelCriterion2()
     for k = 1, config.nstep do
-    --    softmaxs:add(softmax:clone())
+    --    softmaxs:add(softmax:clone()) --wmd
         local w = 1.0 / k
         criterions:add(nn.ClassNLLCriterion(), w)
     end
-    --model:add(softmaxs)
+    --model:add(softmaxs) --wmd
     return model, criterions, outputdim
 end
