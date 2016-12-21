@@ -239,7 +239,7 @@ end
 -- Build simple models.
 function build_policy_model(opt)
     local network_maker = require('train.rl_framework.examples.go.models.' .. opt.model_name)
-    local network, crit, outputdim, monitor_list = network_maker({1, 25, 19, 19}, opt)
+    local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
     if opt.nGPU > 1 then
         require 'cutorch'
         require 'cunn'
@@ -332,9 +332,6 @@ end
 local trainData = load_dataset("train")
 local testData = load_dataset("test")
 
-local sample = trainData:get(1)
-print(sample.table)
-
 local trainLength = 40000
 local testLength = 10000
 
@@ -363,6 +360,9 @@ testDataset = tnt.ListDataset{
 }
 
 local model, criterion = build_policy_model(opt)
+print("------------------ model -----------------")
+print(model)
+
 
 local engine = tnt.OptimEngine()
 local meter = tnt.AverageValueMeter()
