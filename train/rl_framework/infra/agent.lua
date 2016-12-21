@@ -25,10 +25,6 @@ The Agent module implements the agent behavior.
 For opt we have:
    optim:
       supervised:
-      q_learning:
-      double_q_learning:
-      policy_gradient:
-      actor_critic:
 ]]
 
 require 'nn'
