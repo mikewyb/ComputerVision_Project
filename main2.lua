@@ -238,9 +238,9 @@ end
 -- Build simple models.
 function build_policy_model(opt)
     local network_maker = require('models.' .. opt.model_name)
-    local _, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
+    local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
     --TODO replace network with another model
-    local network = require("./models/model") 
+    --local network = require("./models/model") 
     if opt.nGPU > 1 then
         require 'cutorch'
         require 'cunn'
@@ -296,7 +296,10 @@ function getTrainSample(train_dataset, idx)
     --print(ply)
 	print("----------- idx ----------")
 	--print(idx)
-	return feature, torch.DoubleTensor(19,19) --, move
+
+    --TODO fix bugs here
+    return torch.DoubleTensor(12,19,19), torch.DoubleTensor(19,19)
+	--return feature, torch.DoubleTensor(19,19) --, move
 end
 
 function getTrainTraget(dataset, idx)
@@ -316,7 +319,9 @@ function getTestSample(test_dataset, idx)
     --print(ply)
 	print("----------- idx ----------")
 	--print(idx)
-	return feature, move
+    --TODO fix bugs here
+    return torch.DoubleTensor(12, 19, 19), torch.DoubleTensor(19,19)
+	--return feature, move
 end
 
 function getTestLabel(dataset, idx)
