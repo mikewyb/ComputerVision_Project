@@ -238,7 +238,7 @@ end
 
 -- Build simple models.
 function build_policy_model(opt)
-    local network_maker = require('train.rl_framework.examples.go.models.' .. opt.model_name)
+    local network_maker = require('models.' .. opt.model_name)
     local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
     if opt.nGPU > 1 then
         require 'cutorch'
