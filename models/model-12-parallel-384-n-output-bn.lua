@@ -96,6 +96,6 @@ return function(inputdim, config)
         local w = 1.0 / k
         criterions:add(nn.ClassNLLCriterion(), w)
     end
-    model:add(softmaxs)
+    --model:add(softmaxs)
     return model, criterions, outputdim
 end

@@ -1,21 +1,22 @@
-local optParser = require '../opts'
-local opt = optParser.parse(arg)
+
 local nn = require 'nn'
 
-
+local optParser = require '../opts'
+local opt = optParser.parse(arg)
 local Convolution, BatchNorm, ReLU, View
 --local Tanh = nn.Tanh
-
+--[[
 if opt.cuda == true then
     require 'cudnn'
     Convolution = cudnn.SpatialConvolution
     BatchNorm = cudnn.SpatialBatchNormalization
     ReLU = cudnn.ReLU
 else
+--]]
     Convolution = nn.SpatialConvolution
     BatchNorm = nn.SpatialBatchNormalization
     ReLU = nn.ReLU
-end
+--end
 
 View = nn.View
 

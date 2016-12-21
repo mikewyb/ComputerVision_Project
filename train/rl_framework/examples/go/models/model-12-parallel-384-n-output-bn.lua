@@ -26,6 +26,7 @@ local function get_network_spec(n)
         {type='relu'},
         {type='spatialbn'},
 
+        --[[
         -- {type='maxp', kw=3, dw=2},
         {type='conv', kw=3, dw=1, pw=1, nop=384},
         {type='relu'},
@@ -55,7 +56,7 @@ local function get_network_spec(n)
         {type='conv', kw=3, dw=1, pw=1, nop=384},
         {type='relu'},
         {type='spatialbn'},
-
+        --]]
         {type='conv', kw=3, dw=1, pw=1, nop=n},
     }
 end

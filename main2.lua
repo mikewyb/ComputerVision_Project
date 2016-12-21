@@ -1,7 +1,6 @@
 require 'torch'
 require 'optim'
 require 'os'
-require 'optim'
 require 'xlua'
 require 'torch'
 require 'nn'
