@@ -26,28 +26,28 @@ local model  = nn.Sequential()
 --Conv layer 92 channels 5x5 kernel
 model:add(Convolution(92, 12, 5, 5, 1, 1, 2))
 model:add(ReLU(true))
-model:add(BatchNorm())
+model:add(BatchNorm(92))
 
 --Conv layer 384 channels 3x3 kernel  x5
 model:add(Convolution(92, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
-model:add(BatchNorm())
+model:add(BatchNorm(384))
 
 model:add(Convolution(384, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
-model:add(BatchNorm())
+model:add(BatchNorm(384))
 
 model:add(Convolution(384, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
-model:add(BatchNorm())
+model:add(BatchNorm(384))
 
 model:add(Convolution(384, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
-model:add(BatchNorm())
+model:add(BatchNorm(384))
 
 model:add(Convolution(384, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
-model:add(BatchNorm())
+model:add(BatchNorm(384))
 
 model:add(Convolution(384, 1, 3, 3, 1, 1, 1))
 
