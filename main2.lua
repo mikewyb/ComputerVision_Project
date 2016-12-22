@@ -366,6 +366,7 @@ trainDataset = tnt.SplitDataset{
             local i, t = getTrainSample(trainData, idx)
             --print("fuck")
             --print(i:size())
+            print("t:")
             print(t)
             return {
                 input = i,
