@@ -299,7 +299,7 @@ function getTrainSample(train_dataset, idx)
 	--print(idx)
 
     --TODO fix bugs here
-    return torch.DoubleTensor(12,19,19), move--torch.LongTensor(nstep)
+    return torch.FloatTensor(12,19,19), move--torch.LongTensor(nstep)
     --return feature, move
 end
 
@@ -321,7 +321,7 @@ function getTestSample(test_dataset, idx)
 	--print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
-    return torch.DoubleTensor(12, 19, 19), move-- torch.LongTensor(nstep)
+    return torch.FloatTensor(12, 19, 19), move-- torch.LongTensor(nstep)
 	--return feature, move
 end
 
@@ -382,7 +382,8 @@ testDataset = tnt.ListDataset{
         local i, s = getTestSample(testData, idx)
         return {
             input = i, 
-            sampleId = s,
+            --sampleId = s,
+            target = s,
             --sampleId = getTestLabel(testData, idx)
         }
     end
