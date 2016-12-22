@@ -44,7 +44,6 @@ local opt = pl.lapp[[
     --alpha          (default 0.1)
     --nthread        (default 0)
     --batchsize      (default 128)
-    --num_forward_models  (default 4096)       Number of forward models.
     --progress                                 Whether to print the progress
     --nEpochs             (default 1)      Epoch size
     --epoch_size_test     (default 1)      Epoch size for test.
@@ -59,6 +58,9 @@ local opt = pl.lapp[[
     --path                (default './dataset')
     --min_move            (default 30)
     --max_move            (default 50)
+    --momentum            (default 0.9)
+    --verbose             (default 'true')
+    --LR                  (default 0.1)
 ]]
 
 local apply_random_moves = true
@@ -351,6 +353,7 @@ end
 local trainData = load_dataset("train")
 local testData = load_dataset("test")
 
+--TODO change size
 local trainLength = 40000
 local testLength = 10000
 
@@ -470,6 +473,7 @@ while epoch <= opt.nEpochs do
     print("epoch:")
     print(epoch)
 
+    print("train")
     trainDataset:select('train')
     engine:train{
         network = model,
@@ -484,6 +488,7 @@ while epoch <= opt.nEpochs do
         }
     }
 
+    print("validate")
     -- trainDataset = validdataset
     --TODO
     trainDataset:select('val')
