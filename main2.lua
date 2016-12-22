@@ -287,20 +287,20 @@ function getTrainSample(train_dataset, idx)
     end
     --]]
     feature, move, xys, ply = randomPlayAndGetFeature(idx, train_dataset, 'train')
-    print("----------- feature ----------")
+    --print("----------- feature ----------")
     --print(feature)
-    print("----------- move ----------")
+    --print("----------- move ----------")
     --print(move)
-    print("----------- xys ----------")
+    --print("----------- xys ----------")
     --print(xys)
-    print("----------- ply ----------")
+    --print("----------- ply ----------")
     --print(ply)
-	print("----------- idx ----------")
+	--print("----------- idx ----------")
 	--print(idx)
 
     --TODO fix bugs here
-    --return torch.DoubleTensor(12,19,19), torch.LongTensor(nstep)
-	return feature, move
+    return torch.DoubleTensor(12,19,19), move--torch.LongTensor(nstep)
+    --return feature, move
 end
 
 function getTrainTraget(dataset, idx)
@@ -310,18 +310,18 @@ end
 function getTestSample(test_dataset, idx)
     print("in getTestSample")
     feature, move, xys, ply = randomPlayAndGetFeature(idx, test_dataset, 'test')
-    print("----------- feature ----------")
+    --print("----------- feature ----------")
     --print(feature)
-    print("----------- move ----------")
+    --print("----------- move ----------")
     --print(move)
-    print("----------- xys ----------")
+    --print("----------- xys ----------")
     --print(xys)
-    print("----------- ply ----------")
+    --print("----------- ply ----------")
     --print(ply)
-	print("----------- idx ----------")
+	--print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
-    return torch.DoubleTensor(12, 19, 19), torch.LongTensor(nstep)
+    return torch.DoubleTensor(12, 19, 19), move-- torch.LongTensor(nstep)
 	--return feature, move
 end
 
@@ -361,9 +361,9 @@ trainDataset = tnt.SplitDataset{
         list = torch.range(1, trainLength):long(),
         load = function(idx)
             local i, t = getTrainSample(trainData, idx)
-            --print("fuck")
+            print("fuck")
             print(i:size())
-            --print(t)
+            print(t)
             return {
                 input = i,
                 --input = torch.DoubleTensor(92,19,19),
