@@ -299,8 +299,8 @@ function getTrainSample(train_dataset, idx)
 	--print(idx)
 
     --TODO fix bugs here
-    return torch.FloatTensor(12,19,19):double(), move--torch.LongTensor(nstep)
-    --return feature, move
+    --return torch.FloatTensor(12,19,19):double(), move--torch.LongTensor(nstep)
+    return feature:double(), move
 end
 
 function getTrainTraget(dataset, idx)
@@ -321,8 +321,8 @@ function getTestSample(test_dataset, idx)
 	--print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
-    return torch.FloatTensor(12, 19, 19):double(), move-- torch.LongTensor(nstep)
-	--return feature, move
+    --return torch.FloatTensor(12, 19, 19):double(), move-- torch.LongTensor(nstep)
+	return feature:double(), move
 end
 
 function getTestLabel(dataset, idx)
