@@ -361,8 +361,8 @@ trainDataset = tnt.SplitDataset{
         list = torch.range(1, trainLength):long(),
         load = function(idx)
             local i, t = getTrainSample(trainData, idx)
-            print("fuck")
-            print(i:size())
+            --print("fuck")
+            --print(i:size())
             print(t)
             return {
                 input = i,
