@@ -298,7 +298,7 @@ function getTrainSample(train_dataset, idx)
 	--print(idx)
 
     --TODO fix bugs here
-    return torch.DoubleTensor(12,19,19), torch.DoubleTensor(19,19)
+    return torch.DoubleTensor(12,19,19), torch.LongTensor(nstep)
 	--return feature, torch.DoubleTensor(19,19) --, move
 end
 
@@ -320,7 +320,7 @@ function getTestSample(test_dataset, idx)
 	print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
-    return torch.DoubleTensor(12, 19, 19), torch.DoubleTensor(19,19)
+    return torch.DoubleTensor(12, 19, 19), torch.LongTensor(nstep)
 	--return feature, move
 end
 
