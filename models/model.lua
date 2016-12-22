@@ -58,4 +58,9 @@ model:add(Convolution(384, 1, 3, 3, 1, 1, 1))
 
 --model:add(View(19*19))
 
+model:add(View(1, 19*19):setNumInputDims(1)):add(nn.SplitTable(1, 2))  
+local softmax = nn.Sequential()
+softmax:add(nn.LogSoftMax())
+model:add(softmax)
+
 return model
