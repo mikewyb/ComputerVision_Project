@@ -299,7 +299,7 @@ function getTrainSample(train_dataset, idx)
 	--print(idx)
 
     --TODO fix bugs here
-    return torch.FloatTensor(12,19,19), move--torch.LongTensor(nstep)
+    return torch.FloatTensor(12,19,19):double(), move--torch.LongTensor(nstep)
     --return feature, move
 end
 
@@ -321,7 +321,7 @@ function getTestSample(test_dataset, idx)
 	--print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
-    return torch.FloatTensor(12, 19, 19), move-- torch.LongTensor(nstep)
+    return torch.FloatTensor(12, 19, 19):double(), move-- torch.LongTensor(nstep)
 	--return feature, move
 end
 
