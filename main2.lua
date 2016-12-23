@@ -349,11 +349,11 @@ local trainData = load_dataset("train")
 local testData = load_dataset("test")
 
 --TODO change size
-local trainLength = 40000
-local testLength = 10000
+local trainLength = 144748
+local testLength = 26814
 
 trainDataset = tnt.SplitDataset{
-    partitions = {train=0.9, val=0.1},
+    partitions = {train=0.7, val=0.3},
     initialpartition = 'train',
     dataset = tnt.ListDataset{
         list = torch.range(1, trainLength):long(),
