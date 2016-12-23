@@ -166,8 +166,8 @@ Dataset.__init = argcheck{
        self.forward_model_batch_postprocess = forward_model_batch_postprocess
 
        self.makebatch = nnutils.torchnet_makebatch()
-       --TODOWMD
-       --self.tocuda = nnutils.torchnet_tocuda()
+       TODOWMD
+       self.tocuda = nnutils.torchnet_tocuda()
        self.tofloat = nnutils.torchnet_tofloat()
 
        -- self.counter = 1

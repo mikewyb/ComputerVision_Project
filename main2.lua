@@ -37,18 +37,11 @@ require 'train.rl_framework.infra.agent'
 -- TODO: Batchsize 256
 --local
 local opt = pl.lapp[[
-    --actor          (default "policy")
-    --sampling       (default "replay")
-    --optim          (default "supervised")
-    --loss           (default 'policy')
     --alpha          (default 0.1)
     --nthread        (default 0)
     --batchsize      (default 128)
     --progress                                 Whether to print the progress
     --nEpochs             (default 20)      Epoch size
-    --epoch_size_test     (default 1)      Epoch size for test.
-    --data_augmentation                        Whether to use data_augmentation
-
     --nGPU                (default 0)          Number of GPUs to use.
     --nstep               (default 1)          Number of steps.
     --model_name          (default 'model-12-parallel-384-n-output-bn')

@@ -95,9 +95,9 @@ function util_pkg.extract_board_feature(k)
     util_pkg.features[k] = named_features 
     util_pkg.t_received[k] = t_received
 
-    -- TODOWMD
-    --return feature:cuda()
-    return feature
+    return feature:cuda()
+    -- TODOWMD 
+    --return feature
     -- return tonumber(mboard.seq), tonumber(mboard.b)
 end
 

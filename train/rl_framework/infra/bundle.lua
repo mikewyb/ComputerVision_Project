@@ -97,9 +97,9 @@ Bundle.__init = argcheck{
         self.forwarded = { }
 
         -- TODOWMD
-        --if self.opt.nGPU > 1 then
-        --    self.crits = crits and crits:cuda() or nn.ClassNLLCriterion():cuda()
-        --else 
+        if self.opt.nGPU > 1 then
+            self.crits = crits and crits:cuda() or nn.ClassNLLCriterion():cuda()
+        else 
             self.crits = crits and crits or nn.ClassNLLCriterion()
         --end
         --
