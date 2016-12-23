@@ -121,7 +121,7 @@ local function load_random_game(sample_idx, dataset, game, b)
             -- require 'fb.debugger'.enter()
         local content = sample.table.content
         local filename = sample.table.filename
-        print(ontent:storage():string())
+        print(content:storage():string())
         game = sgfloader.parse(content:storage():string(), filename)
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
