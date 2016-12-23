@@ -23,12 +23,12 @@ local board = require 'board.board'
 local common = require 'common.common'
 local goutils = require 'utils.goutils'
 
-local framework = require 'train.rl_framework.infra.framework'
-local rl = require 'train.rl_framework.infra.env'
+--local framework = require 'train.rl_framework.infra.framework'
+--local rl = require 'train.rl_framework.infra.env'
 local pl = require 'pl.import_into'()
 
-require 'train.rl_framework.infra.bundle'
-require 'train.rl_framework.infra.agent'
+--require 'train.rl_framework.infra.bundle'
+--require 'train.rl_framework.infra.agent'
 
 --local tnt = require 'torchnet'
 

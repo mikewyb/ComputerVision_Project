@@ -1,6 +1,6 @@
 local pl = require('pl.import_into')()
 local nnutils = require 'utils.nnutils'
-require 'train.rl_framework.examples.go.ParallelCriterion2'
+require 'models.ParallelCriterion2'
 
 -- Specification.
 local function get_network_spec(n)
