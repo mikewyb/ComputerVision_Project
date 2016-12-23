@@ -113,7 +113,7 @@ end
 
 local function load_random_game(sample_idx, dataset, game, b)
 	print("load game")
-    local moveforward = 1
+    local moveforward = 2
     while true do
         local sample = dataset:get(sample_idx)
         for k, v in pairs(sample) do
