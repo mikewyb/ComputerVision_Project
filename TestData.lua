@@ -130,7 +130,12 @@ local function load_random_game(sample_idx, dataset, game, b)
         if max_moves > max_can_move and max_can_move >= 0 then
             max_moves = max_can_move
         end
+        if min_random_moves > max_can_move and max_can_move >= 0 then
+            min_random_moves = max_can_move
+        end
         moveforward = moveforward + 1
+        print(string.format("max_can_move: %d", max_can_move))
+
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
