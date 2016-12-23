@@ -463,17 +463,13 @@ end
 engine.hooks.onForwardCriterion = function(state)
     print("In onForwardCriterion")
     meter:add(state.criterion.output)
-	print("output")
-	print(state.network.output)
-	print("target")
-	print(state.sample.target)
-    local train_aver_loss, train_err_str = compute_aver_loss(state)
-    clerr:add(state.network.output, state.sample.target)
+	--local train_aver_loss, train_err_str = compute_aver_loss(state)
+    --clerr:add(state.network.output, state.sample.target)
     if opt.verbose == true then
-        local t_str = os.date("%c", os.time())
-        print(string.format("| %s | %s Batch: %d/%d; avg. loss: %2.4f; avg_loss: %2.4f, tain_err: %s",
-        t_str, mode, batch, state.iterator.dataset:size(), meter:value(), train_aver_loss, train_err_str))
-        io.flush()
+        --local t_str = os.date("%c", os.time())
+        --print(string.format("| %s | %s Batch: %d/%d; avg. loss: %2.4f; avg_loss: %2.4f, tain_err: %s",
+        --t_str, mode, batch, state.iterator.dataset:size(), meter:value(), train_aver_loss, train_err_str))
+        --io.flush()
     else
         xlua.progress(batch, state.iterator.dataset:size())
     end
@@ -483,10 +479,14 @@ end
 
 engine.hooks.onEnd = function(state)
     print("In engin onEnd")
-    print(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f",
-    mode, meter:value(), clerr:value{k = 1}, timer:value()))
-    convergeLog:write(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f\n",
-    mode, meter:value(), clerr:value{k = 1}, timer:value()))
+    --print(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f",
+    --mode, meter:value(), clerr:value{k = 1}, timer:value()))
+    --convergeLog:write(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f\n",
+    --mode, meter:value(), clerr:value{k = 1}, timer:value()))
+    print(string.format("%s: avg. loss: %2.4f; time: %2.4f",
+    mode, meter:value(), timer:value()))
+    convergeLog:write(string.format("%s: avg. loss: %2.4f; time: %2.4f\n",
+    mode, meter:value(), timer:value()))
 end
 
 local epoch = 1
