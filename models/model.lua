@@ -66,4 +66,4 @@ softmax:add(nn.LogSoftMax())
 network:add(softmax)
 --network:add(nn.LogSoftMax())
 
-return model
+return network
