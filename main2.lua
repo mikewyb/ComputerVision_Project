@@ -426,7 +426,7 @@ local logName = opt.output or "submission"
 local convergeLog = assert(io.open("outputs/".. logName .. "_cvgLog.logs", "w"))
 
 engine.hooks.onStart = function(state)
-    print("In onStart")
+    print("In onStart\n")
     meter:reset()
     clerr:reset()
     timer:reset()
@@ -455,7 +455,7 @@ if opt.cuda == 'true' then
 end
 
 engine.hooks.onForwardCriterion = function(state)
-    print("In onForwardCriterion")
+    --print("In onForwardCriterion")
     meter:add(state.criterion.output)
 	--local train_aver_loss, train_err_str = compute_aver_loss(state)
     --clerr:add(state.network.output, state.sample.target)
@@ -472,15 +472,13 @@ engine.hooks.onForwardCriterion = function(state)
 end
 
 engine.hooks.onEnd = function(state)
-    print("In engin onEnd")
+    print("In engin onEnd\n")
     --print(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f",
     --mode, meter:value(), clerr:value{k = 1}, timer:value()))
     --convergeLog:write(string.format("%s: avg. loss: %2.4f; avg. error: %2.4f, time: %2.4f\n",
     --mode, meter:value(), clerr:value{k = 1}, timer:value()))
-    print(string.format("%s: avg. loss: %2.4f; time: %2.4f",
-    mode, meter:value(), timer:value()))
-    convergeLog:write(string.format("%s: avg. loss: %2.4f; time: %2.4f\n",
-    mode, meter:value(), timer:value()))
+    print(string.format("%s: avg. loss: %2.4f; time: %2.4f",mode, meter:value(), timer:value()))
+    convergeLog:write(string.format("%s: avg. loss: %2.4f; time: %2.4f\n",mode, meter:value(), timer:value()))
 end
 
 local epoch = 1
