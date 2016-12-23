@@ -134,10 +134,11 @@ local function load_random_game(sample_idx, dataset, game, b)
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
-			print("------------play-------------")
-            local game_play_through = true
+			local game_play_through = true
             if apply_random_moves then
                 local round = math.random(game:num_round()) - 1
+                print(string.format("------------play rand round %d", round))
+                
 				if round < min_random_moves then
 					round = min_random_moves
 				end
