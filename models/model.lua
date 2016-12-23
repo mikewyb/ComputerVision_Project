@@ -30,12 +30,13 @@ model:add(Convolution(12, 92, 5, 5, 1, 1, 2))
 model:add(ReLU(true))
 model:add(BatchNorm(92))
 
---[[
+
 --Conv layer 384 channels 3x3 kernel  x5
 model:add(Convolution(92, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
 model:add(BatchNorm(384))
 
+--[[
 model:add(Convolution(384, 384, 3, 3, 1, 1, 1))
 model:add(ReLU(true))
 model:add(BatchNorm(384))
