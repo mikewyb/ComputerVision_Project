@@ -111,8 +111,7 @@ local function get_sa(b, game, sample_idx, info, nstep)
 end
 
 local function load_random_game(sample_idx, dataset, game, b)
-	--print("load game")
-
+	print("load game")
     while true do
         local sample = dataset:get(sample_idx)
         for k, v in pairs(sample) do
@@ -122,11 +121,12 @@ local function load_random_game(sample_idx, dataset, game, b)
             -- require 'fb.debugger'.enter()
         local content = sample.table.content
         local filename = sample.table.filename
+        print(ontent:storage():string())
         game = sgfloader.parse(content:storage():string(), filename)
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
-			--print("------------play-------------")
+			print("------------play-------------")
             local game_play_through = true
             if apply_random_moves then
                 local round = math.random(game:num_round()) - 1
@@ -136,7 +136,7 @@ local function load_random_game(sample_idx, dataset, game, b)
 				if round > max_random_moves then
 					round = max_random_moves
 				end								
-				--print(round)
+				print(round)
                 
                 for j = 1, round do
                     if not protected_play(b, game) then
