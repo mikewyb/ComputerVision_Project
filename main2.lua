@@ -417,6 +417,7 @@ local timer = tnt.TimeMeter()
 local batch = 1
 local logName = opt.output or "submission"
 local convergeLog = assert(io.open("outputs/".. logName .. "_cvgLog.logs", "w"))
+local lr_acc = 0
 
 engine.hooks.onStart = function(state)
     --print("In onStart\n")
@@ -465,7 +466,15 @@ engine.hooks.onForwardCriterion = function(state)
 end
 
 engine.hooks.onUpdate = function(state)
+    if state.epoch >= 10 then
+        lr_acc = lr_acc + 1
+        if lr_acc > 20 then
+            opt.alpha = opt.alpha / 1.2
+            lr_acc = 0
+        end
+    end
 	state.network:updateParameters(opt.alpha)
+    
 end
 
 engine.hooks.onEnd = function(state)
@@ -552,7 +561,7 @@ end
 
 engine.hooks.onEnd = function(state)
     --print("In engin onEnd")
-    --submission:close()
+    submission:close()
     convergeLog:close()
 end
 
