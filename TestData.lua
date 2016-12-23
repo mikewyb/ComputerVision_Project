@@ -43,6 +43,7 @@ local opt = pl.lapp[[
     --LR                  (default 0.1)
     --output              (default 'submission.csv')
     --logDir              (default 'logs')
+    --idx                 (default 467)
 ]]
 
 print(pl.pretty.write(opt))
@@ -275,7 +276,7 @@ local testData = load_dataset("test")
 local trainLength = 40000
 local testLength = 10000
 
-local i, t = getTrainSample(trainData, 264)
+local i, t = getTrainSample(trainData, opt.idx)
 
 
 print("The End!")
