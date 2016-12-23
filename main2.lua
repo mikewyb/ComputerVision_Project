@@ -453,6 +453,10 @@ end
 engine.hooks.onForwardCriterion = function(state)
     print("In onForwardCriterion")
     meter:add(state.criterion.output)
+	print("output")
+	print(state.network.output)
+	print("target")
+	print(state.sample.target)
     clerr:add(state.network.output, state.sample.target)
     if opt.verbose == true then
         print(string.format("%s Batch: %d/%d; avg. loss: %2.4f; avg. error: %2.4f",
