@@ -170,7 +170,7 @@ local function load_random_game(sample_idx, dataset, game, b)
         end
         moveforward = moveforward + 1
         
-        if max_can_move == 0 and moveforward == 4 then
+        if max_can_move == 0 and moveforward == 3 then
                 return game, b, false
 
 	end
@@ -230,7 +230,19 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
 
     repeat
     if game_restarted or game:play_get_ply() >= game:play_get_maxply() - nstep + 1 then
-        game, b = load_random_game(sample_idx, dataset, game, b)
+        game, b, ok = load_random_game(sample_idx, dataset, game, b)
+        
+        if ok == false then
+        local layers = 12
+        if opt.feature_type = "extended" then
+            layers = 25
+        end
+	
+        local retmove = torch.LongTensor(1)
+        retmove[1] = 0
+        return torch.DoubleTensor(layers,19,19), retmove, torch.LongTensor(1, 2), 0
+        end
+
         game_restarted = false
     else
         if not protected_play(b, game) then
