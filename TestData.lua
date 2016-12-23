@@ -127,6 +127,9 @@ local function load_random_game(sample_idx, dataset, game, b)
         game = sgfloader.parse(content:storage():string(), filename)
         local max_moves = max_random_moves
         local max_can_move = game:num_round()-moveforward
+	if max_can_move < 0 then
+		max_can_move = 0
+	end
         if max_moves > max_can_move and max_can_move >= 0 then
             max_moves = max_can_move
         end
@@ -134,6 +137,10 @@ local function load_random_game(sample_idx, dataset, game, b)
             min_random_moves = max_can_move
         end
         moveforward = moveforward + 1
+
+	if max_can_move == 0 and moveforward == 4 then
+		return game, b
+	end
         print(string.format("max_can_move: %d", max_can_move))
 
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
@@ -166,6 +173,7 @@ local function load_random_game(sample_idx, dataset, game, b)
 	--print(board.show(b, "all"))				
 	--print(game)
     return game, b
+
 end
 
 local function randomPlayAndGetFeature(sample_idx, dataset, info)
@@ -219,7 +227,7 @@ function getTrainSample(train_dataset, idx)
     
     feature, move, xys, ply = randomPlayAndGetFeature(idx, train_dataset, 'train')
     print("----------- feature ----------")
-    print(feature)
+    --print(feature)
     print("----------- move ----------")
     print(move)
     print("----------- xys ----------")
@@ -282,7 +290,7 @@ local testData = load_dataset("test")
 --TODO change size
 local trainLength = 40000
 local testLength = 10000
-
+print(opt.idx)
 local i, t = getTrainSample(trainData, opt.idx)
 
 

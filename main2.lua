@@ -159,7 +159,10 @@ local function load_random_game(sample_idx, dataset, game, b)
 	
         local max_moves = max_random_moves
         local max_can_move = game:num_round()-moveforward
-        if max_moves > max_can_move and max_can_move >= 0 then
+        if max_can_move < 0 then
+		max_can_move = 0
+	end
+	if max_moves > max_can_move and max_can_move >= 0 then
             max_moves = max_can_move
         end
         if min_random_moves > max_can_move and max_can_move >= 0 then
