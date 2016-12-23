@@ -299,8 +299,8 @@ function getTrainSample(train_dataset, idx)
     --print(move)
     --print("----------- xys ----------")
     --print(xys)
-    --print("----------- ply ----------")
-    --print(ply)
+    print("----------- ply ----------")
+    print(ply)
 	--print("----------- idx ----------")
 	--print(idx)
 
@@ -322,13 +322,13 @@ function getTestSample(test_dataset, idx)
     --print(move)
     --print("----------- xys ----------")
     --print(xys)
-    --print("----------- ply ----------")
-    --print(ply)
+    print("----------- ply ----------")
+    print(ply)
 	--print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
     --return torch.FloatTensor(12, 19, 19):double(), move-- torch.LongTensor(nstep)
-	return feature:double(), move
+	return feature:double(), move, ply, idx
 end
 
 function getTestLabel(dataset, idx)
@@ -387,11 +387,13 @@ trainDataset = tnt.SplitDataset{
 testDataset = tnt.ListDataset{
     list = torch.range(1, testLength):long(),
     load = function(idx)
-        local i, s = getTestSample(testData, idx)
+        local i, s, sid, mid = getTestSample(testData, idx)
         return {
             input = i, 
             --sampleId = s,
-            target = s,
+            sfgid = sid,
+            moveid = mid,
+            sampleId = s,
             --sampleId = getTestLabel(testData, idx)
         }
     end
@@ -408,7 +410,15 @@ for sample in iter() do
     print(sample.input:size())
 end
 --]]
-
+local function compute_aver_loss(state)
+    local aver_train_errs = { }
+    local err_str = ""
+    for k, e in pairs(state.errs) do
+        aver_train_errs[k] = e:sum(1) / state.errs_count / e:size(1)
+        err_str = err_str .. string.format("[%s]: %5.6f ", k, aver_train_errs[k][1])
+    end
+    return aver_train_errs, err_str
+end
 
 local engine = tnt.OptimEngine()
 local meter = tnt.AverageValueMeter()
@@ -457,10 +467,13 @@ engine.hooks.onForwardCriterion = function(state)
 	print(state.network.output)
 	print("target")
 	print(state.sample.target)
+    local train_aver_loss, train_err_str = compute_aver_loss(state)
     clerr:add(state.network.output, state.sample.target)
     if opt.verbose == true then
-        print(string.format("%s Batch: %d/%d; avg. loss: %2.4f; avg. error: %2.4f",
-                mode, batch, state.iterator.dataset:size(), meter:value(), clerr:value{k = 1}))
+        local t_str = os.date("%c", os.time())
+        print(string.format("| %s | %s Batch: %d/%d; avg. loss: %2.4f; avg_loss: %2.4f, tain_err: %s",
+               t_str, mode, batch, state.iterator.dataset:size(), meter:value(), train_aver_loss, train_err_str)
+        io.flush()
     else
         xlua.progress(batch, state.iterator.dataset:size())
     end
