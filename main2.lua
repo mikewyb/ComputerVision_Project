@@ -65,6 +65,8 @@ local opt = pl.lapp[[
     --logDir              (default 'logs')
 ]]
 
+print(pl.pretty.write(opt))
+
 local apply_random_moves = true
 local min_random_moves = opt.min_move
 local max_random_moves = opt.max_move
@@ -149,7 +151,7 @@ local function get_sa(b, game, sample_idx, info, nstep)
 end
 
 local function load_random_game(sample_idx, dataset, game, b)
-	print("load game")
+	--print("load game")
 
     while true do
         local sample = dataset:get(sample_idx)
@@ -261,7 +263,7 @@ end
 
 
 function getTrainSample(train_dataset, idx)
-    print("in getTrainSample")
+    --print("in getTrainSample")
     --[[
     sample_idx = math.random(train_dataset:size())
     local sample = train_dataset:get(sample_idx)
@@ -312,11 +314,11 @@ function getTrainSample(train_dataset, idx)
 end
 
 function getTrainTraget(dataset, idx)
-    print("in getTrainTraget")
+    --print("in getTrainTraget")
 end
 
 function getTestSample(test_dataset, idx)
-    print("in getTestSample")
+    ---print("in getTestSample")
     feature, move, xys, ply = randomPlayAndGetFeature(idx, test_dataset, 'test')
     --print("----------- feature ----------")
     --print(feature)
@@ -334,7 +336,7 @@ function getTestSample(test_dataset, idx)
 end
 
 function getTestLabel(dataset, idx)
-    print("in getTestLabel")
+    --print("in getTestLabel")
 end
 
 
@@ -347,7 +349,6 @@ function getIterator(dataset)
     }
 end
 
-print("ssss")
 local function load_dataset(partition)
     return tnt.IndexedDataset{
     	fields = { opt.datasource .. "_" .. partition },
@@ -370,7 +371,6 @@ trainDataset = tnt.SplitDataset{
         list = torch.range(1, trainLength):long(),
         load = function(idx)
             local i, t = getTrainSample(trainData, idx)
-            --print("fuck")
             --print(i:size())
             --print("t:")
             --print(t)
@@ -431,8 +431,6 @@ local timer = tnt.TimeMeter()
 local batch = 1
 local logName = opt.output or "submission"
 local convergeLog = assert(io.open("outputs/".. logName .. "_cvgLog.logs", "w"))
-
-print("h")
 
 engine.hooks.onStart = function(state)
     print("In onStart")
