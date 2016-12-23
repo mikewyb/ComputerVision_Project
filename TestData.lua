@@ -123,6 +123,11 @@ local function load_random_game(sample_idx, dataset, game, b)
         local filename = sample.table.filename
         print(content:storage():string())
         game = sgfloader.parse(content:storage():string(), filename)
+        local max_moves = max_random_moves
+        local max_can_move = game:play_get_maxply()-1
+        if max_moves > max_can_move then
+            max_moves = max_can_move
+        end
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
@@ -133,8 +138,8 @@ local function load_random_game(sample_idx, dataset, game, b)
 				if round < min_random_moves then
 					round = min_random_moves
 				end
-				if round > max_random_moves then
-					round = max_random_moves
+				if round > max_moves then
+					round = max_moves
 				end								
 				print(round)
                 
