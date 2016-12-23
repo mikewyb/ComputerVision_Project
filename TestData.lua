@@ -192,7 +192,11 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
 
     repeat
     if game_restarted or game:play_get_ply() >= game:play_get_maxply() - nstep + 1 then
-        game, b = load_random_game(sample_idx, dataset, game, b)
+        game, b, ok = load_random_game(sample_idx, dataset, game, b)
+        if ok == false then
+            return torch.DoubleTensor(12,19,19), torch.LongTensor(1), torch.LongTensor(1, 2), 0
+        end
+        
         game_restarted = false
     else
         if not protected_play(b, game) then
