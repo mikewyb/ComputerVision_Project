@@ -472,7 +472,7 @@ engine.hooks.onForwardCriterion = function(state)
     if opt.verbose == true then
         local t_str = os.date("%c", os.time())
         print(string.format("| %s | %s Batch: %d/%d; avg. loss: %2.4f; avg_loss: %2.4f, tain_err: %s",
-               t_str, mode, batch, state.iterator.dataset:size(), meter:value(), train_aver_loss, train_err_str)
+        t_str, mode, batch, state.iterator.dataset:size(), meter:value(), train_aver_loss, train_err_str))
         io.flush()
     else
         xlua.progress(batch, state.iterator.dataset:size())
