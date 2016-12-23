@@ -97,6 +97,7 @@ return function(inputdim, config)
         --criterions:add(nn.ClassNLLCriterion(), w)
     --end
     --model:add(softmaxs) --wmd
+    model:add(softmax) --wmd
     criterions = nn.ClassNLLCriterion()
     return model, criterions, outputdim
 end
