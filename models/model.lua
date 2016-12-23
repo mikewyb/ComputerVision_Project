@@ -20,6 +20,7 @@ else
 
 View = nn.View
 
+local network = nn.Sequential()
 local model = nn.Sequential()
 -- TODO the input should be 12 not 92
 
@@ -58,8 +59,11 @@ model:add(Convolution(384, 1, 3, 3, 1, 1, 1))
 --output: 1x19x19
 
 --model:add(View(19*19))
+network:add(model):add(View(1, 19*19):setNumInputDims(3)):add(nn.SplitTable(1, 2))  
+local softmax = nn.Sequential()
+softmax:add(nn.LogSoftMax())
 
-model:add(View(1, 19*19):setNumInputDims(3)):add(nn.SplitTable(1, 2))  
-model:add(nn.LogSoftMax())
+network:add(softmax)
+--network:add(nn.LogSoftMax())
 
 return model
