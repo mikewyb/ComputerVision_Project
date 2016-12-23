@@ -244,7 +244,7 @@ function build_policy_model(opt)
     crit = nn.ClassNLLCriterion()
     
     --TODO replace network with another model
-    --local network = require("./models/model") 
+    local network = require("./models/model") 
     if opt.nGPU > 1 then
         require 'cutorch'
         require 'cunn'
