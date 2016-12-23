@@ -138,7 +138,7 @@ local function load_random_game(sample_idx, dataset, game, b)
         end
         moveforward = moveforward + 1
         print(string.format("max_can_move:%d, moveforward:%d", max_can_move, moveforward))
-        if max_can_move <= 0 and moveforward == 4 then
+        if max_can_move <= 0 and moveforward == 3 then
                 return game, b, false
 	    end
 
@@ -196,7 +196,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
         if ok == false then
             return torch.DoubleTensor(12,19,19), torch.LongTensor(1), torch.LongTensor(1, 2), 0
         end
-        
+
         game_restarted = false
     else
         if not protected_play(b, game) then
