@@ -42,12 +42,12 @@ local opt = pl.lapp[[
     --batchsize      (default 128)
     --progress                                 Whether to print the progress
     --nEpochs             (default 20)      Epoch size
-    --nGPU                (default 0)          Number of GPUs to use.
+    --nGPU                (default 1)          Number of GPUs to use.
     --nstep               (default 1)          Number of steps.
     --model_name          (default 'model-12-parallel-384-n-output-bn')
     --datasource          (default 'kgs')
     --feature_type        (default 'extended')
-    --cuda                (default 'false')
+    --cuda                (default 'true')
     --path                (default './dataset')
     --min_move            (default 30)
     --max_move            (default 50)
