@@ -137,7 +137,6 @@ local function load_random_game(sample_idx, dataset, game, b)
 			local game_play_through = true
             if apply_random_moves then
                 local round = math.random(game:num_round()) - 1
-                print(string.format("------------play rand round %d", round))
                 
 				if round < min_random_moves then
 					round = min_random_moves
@@ -145,7 +144,7 @@ local function load_random_game(sample_idx, dataset, game, b)
 				if round > max_moves then
 					round = max_moves
 				end								
-				print(round)
+				print(string.format("------------play rand round %d", round))
                 
                 for j = 1, round do
                     if not protected_play(b, game) then
