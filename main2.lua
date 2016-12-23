@@ -45,7 +45,7 @@ local opt = pl.lapp[[
     --nthread        (default 0)
     --batchsize      (default 128)
     --progress                                 Whether to print the progress
-    --nEpochs             (default 1)      Epoch size
+    --nEpochs             (default 20)      Epoch size
     --epoch_size_test     (default 1)      Epoch size for test.
     --data_augmentation                        Whether to use data_augmentation
 
@@ -61,6 +61,8 @@ local opt = pl.lapp[[
     --momentum            (default 0.9)
     --verbose             (default 'true')
     --LR                  (default 0.1)
+    --output              (default 'submission.csv')
+    --logDir              (default 'logs')
 ]]
 
 local apply_random_moves = true
@@ -299,8 +301,8 @@ function getTrainSample(train_dataset, idx)
     --print(move)
     --print("----------- xys ----------")
     --print(xys)
-    print("----------- ply ----------")
-    print(ply)
+    --print("----------- ply ----------")
+    --print(ply)
 	--print("----------- idx ----------")
 	--print(idx)
 
@@ -322,8 +324,8 @@ function getTestSample(test_dataset, idx)
     --print(move)
     --print("----------- xys ----------")
     --print(xys)
-    print("----------- ply ----------")
-    print(ply)
+    --print("----------- ply ----------")
+    --print(ply)
 	--print("----------- idx ----------")
 	--print(idx)
     --TODO fix bugs here
@@ -370,8 +372,8 @@ trainDataset = tnt.SplitDataset{
             local i, t = getTrainSample(trainData, idx)
             --print("fuck")
             --print(i:size())
-            print("t:")
-            print(t)
+            --print("t:")
+            --print(t)
             return {
                 input = i,
                 --input = torch.DoubleTensor(92,19,19),
@@ -393,7 +395,8 @@ testDataset = tnt.ListDataset{
             --sampleId = s,
             sfgid = sid,
             moveid = mid,
-            sampleId = s,
+            index = idx
+            --target = s,
             --sampleId = getTestLabel(testData, idx)
         }
     end
@@ -523,9 +526,9 @@ while epoch <= opt.nEpochs do
     epoch = epoch + 1
 end
 
---local subName = opt.output or "submission"
---local submission = assert(io.open(opt.logDir .. "/".. subName .. ".csv", "w"))
---submission:write("Filename,ClassId\n")
+local subName = opt.output or "submission"
+local submission = assert(io.open(opt.logDir .. "/".. subName .. ".csv", "w"))
+submission:write("Index, SGFId, MoveId, Move\n")
 batch = 1
 
 --[[
@@ -534,11 +537,14 @@ batch = 1
 --]]
 engine.hooks.onForward = function(state)
     print("In engin onforward")
-    local fileNames  = state.sample.sampleId
+    local index = state.sample.index
+    local sfg  = state.sample.sfgid
+    local move = state.sample.mid
     local _, pred = state.network.output:max(2)
     pred = pred - 1
     for i = 1, pred:size(1) do
-        --submission:write(string.format("%05d,%d\n", fileNames[i][1], pred[i][1]))
+        -- index, sfgid, moveid, move ((x-1)*19+y)
+        submission:write(string.format("%d, %d, %d, %d\n", index, sfg, move, pred[i][1]))
     end
     xlua.progress(batch, state.iterator.dataset:size())
     batch = batch + 1
