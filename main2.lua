@@ -145,7 +145,7 @@ end
 
 local function load_random_game(sample_idx, dataset, game, b)
 	--print("load game")
-
+    local moveforward = 2
     while true do
         local sample = dataset:get(sample_idx)
         for k, v in pairs(sample) do
@@ -156,6 +156,17 @@ local function load_random_game(sample_idx, dataset, game, b)
         local content = sample.table.content
         local filename = sample.table.filename
         game = sgfloader.parse(content:storage():string(), filename)
+        
+        local max_moves = max_random_moves
+        local max_can_move = game:num_round()-moveforward
+        if max_moves > max_can_move and max_can_move >= 0 then
+            max_moves = max_can_move
+        end
+        if min_random_moves > max_can_move and max_can_move >= 0 then
+            min_random_moves = max_can_move
+        end
+        moveforward = moveforward + 1
+        
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
