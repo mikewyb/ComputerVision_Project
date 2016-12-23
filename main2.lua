@@ -243,9 +243,6 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     if not game_restarted then
         for i = 1, nstep do
             local x1, y1, player = sgfloader.parse_move(game:play_current(i - 1), false)
-            -- player ~= nil: It is a valid move
-            -- y1 > 0: it is not a pass/(0, 0) or resign/(1, 0)
-            -- Sometime pass = (20, 20) so we need to address this as well.
             if player == nil or y1 == 0 or y1 == common.board_size + 1 then
                 game_restarted = true
                 break
@@ -349,8 +346,8 @@ local trainData = load_dataset("train")
 local testData = load_dataset("test")
 
 --TODO change size
-local trainLength = 144748
-local testLength = 26814
+local trainLength = 40000 ---144748
+local testLength = 1000--26814
 
 trainDataset = tnt.SplitDataset{
     partitions = {train=0.7, val=0.3},
@@ -465,6 +462,10 @@ engine.hooks.onForwardCriterion = function(state)
     end
     batch = batch + 1 -- batch increment has to happen here to work for train, val and test.
     timer:incUnit()
+end
+
+engine.hooks.onUpdate = function(state)
+	state.network:updateParameters(opt.alpha)
 end
 
 engine.hooks.onEnd = function(state)
