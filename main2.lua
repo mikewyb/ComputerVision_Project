@@ -360,7 +360,7 @@ trainDataset = tnt.SplitDataset{
         load = function(idx)
             local i, t = getTrainSample(trainData, idx)
             --print(i:size())
-            print(string.format("load idx: %d, t: %d\n", idx, t[1]))
+           -- print(string.format("load idx: %d, t: %d\n", idx, t[1]))
             --print("t:")
             --print(t)
             return {
