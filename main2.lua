@@ -170,6 +170,11 @@ local function load_random_game(sample_idx, dataset, game, b)
         end
         moveforward = moveforward + 1
         
+        if max_can_move == 0 and moveforward == 4 then
+                return game, b, false
+
+	end
+
         if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
             board.clear(b)
             goutils.apply_handicaps(b, game)
@@ -199,7 +204,7 @@ local function load_random_game(sample_idx, dataset, game, b)
     end
 	--print(board.show(b, "all"))				
 	--print(game)
-    return game, b
+    return game, b, true
 end
 
 local function randomPlayAndGetFeature(sample_idx, dataset, info)
@@ -211,8 +216,11 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     local b = board.new()
     local game
 
-    game, b = load_random_game(sample_idx, dataset, game, b)
-	
+    game, b, ok = load_random_game(sample_idx, dataset, game, b)
+	if ok == false then
+        return torch.DoubleTensor(12,19,19), torch.LongTensor(1), torch.LongTensor(1, 2), 0
+    end
+
     repeat
     if game_restarted or game:play_get_ply() >= game:play_get_maxply() - nstep + 1 then
         game, b = load_random_game(sample_idx, dataset, game, b)
