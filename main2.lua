@@ -264,38 +264,7 @@ end
 
 function getTrainSample(train_dataset, idx)
     --print("in getTrainSample")
-    --[[
-    sample_idx = math.random(train_dataset:size())
-    local sample = train_dataset:get(sample_idx)
-    for k, v in pairs(sample) do
-        sample = v
-        break
-    end
-
-    local content = sample.table.content
-    local filename = sample.table.filename
-
-    b = board.new()
-
-    game = sgfloader.parse(content:storage():string(), filename)
-    print(content:storage():string())
-    print(sgfloader.show_move(game))
-    print(game:num_round())
-
-    if game ~= nil and game:has_moves() and game:get_boardsize() == common.board_size and game:play_start() then
-        board.clear(b)
-        goutils.apply_handicaps(b, game)
-
-        local game_play_through = true
-        local round = math.random(game:num_round()) - 1
-        for j = 1, round do
-		    --print(game)
-		    if not protected_play(b, game) then
-       		    break
-      	    end
-  	    end
-    end
-    --]]
+ 
     feature, move, xys, ply = randomPlayAndGetFeature(idx, train_dataset, 'train')
     --print("----------- feature ----------")
     --print(feature)
