@@ -205,19 +205,17 @@ end
 function getTrainSample(train_dataset, idx)
     
     feature, move, xys, ply = randomPlayAndGetFeature(idx, train_dataset, 'train')
-    --print("----------- feature ----------")
-    --print(feature)
-    --print("----------- move ----------")
-    --print(move)
-    --print("----------- xys ----------")
-    --print(xys)
-    --print("----------- ply ----------")
-    --print(ply)
-	--print("----------- idx ----------")
-	--print(idx)
+    print("----------- feature ----------")
+    print(feature)
+    print("----------- move ----------")
+    print(move)
+    print("----------- xys ----------")
+    print(xys)
+    print("----------- ply ----------")
+    print(ply)
+	print("----------- idx ----------")
+	print(idx)
 
-    --TODO fix bugs here
-    --return torch.FloatTensor(12,19,19):double(), move--torch.LongTensor(nstep)
     return feature:double(), move
 end
 
