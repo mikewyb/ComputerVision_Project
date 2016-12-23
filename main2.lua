@@ -474,7 +474,6 @@ engine.hooks.onUpdate = function(state)
         end
     end
 	state.network:updateParameters(opt.alpha)
-    
 end
 
 engine.hooks.onEnd = function(state)
