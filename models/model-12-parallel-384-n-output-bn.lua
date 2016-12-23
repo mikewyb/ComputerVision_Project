@@ -88,18 +88,17 @@ return function(inputdim, config)
     softmax:add(nn.LogSoftMax())
     -- )View(-1):setNumInputDims(2))
 
-    --local softmaxs = nn.ParallelTable()
+    local softmaxs = nn.ParallelTable()
     -- Use self-defined parallel criterion 2, which can handle targets of the format nbatch * #target
-    --local criterions = nn.ParallelCriterion2()
-    --for k = 1, config.nstep do
-    --    softmaxs:add(softmax:clone()) --wmd
-        --local w = 1.0 / k
-        --criterions:add(nn.ClassNLLCriterion(), w)
-    --end
-    --model:add(softmaxs) --wmd
+    local criterions = nn.ParallelCriterion2()
+    for k = 1, config.nstep do
+        softmaxs:add(softmax:clone()) --wmd
+        local w = 1.0 / k
+        criterions:add(nn.ClassNLLCriterion(), w)
+    end
+    model:add(softmaxs) --wmd
     
-    --model:add(softmax) --wmd
-    model:add(nn.LogSoftMax())
-    criterions = nn.ClassNLLCriterion()
+    --model:add(nn.LogSoftMax())
+    --criterions = nn.ClassNLLCriterion()
     return model, criterions, outputdim
 end

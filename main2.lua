@@ -242,7 +242,7 @@ function build_policy_model(opt)
     local network_maker = require('models.' .. opt.model_name)
     local network, crit, outputdim, monitor_list = network_maker({1, 12, 19, 19}, opt) -- change from 25
     print(network)
-    crit = nn.ClassNLLCriterion()
+    --crit = nn.ClassNLLCriterion()
     
     --TODO replace network with another model
     --local network = require("./models/model") 
