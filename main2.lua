@@ -219,7 +219,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
     game, b, ok = load_random_game(sample_idx, dataset, game, b)
 	if ok == false then
         local layers = 12
-        if opt.feature_type = "extended" then
+        if opt.feature_type == "extended" then
             layers = 25
         end
 	
@@ -234,7 +234,7 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
         
         if ok == false then
         local layers = 12
-        if opt.feature_type = "extended" then
+        if opt.feature_type == "extended" then
             layers = 25
         end
 	
