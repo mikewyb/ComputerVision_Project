@@ -127,9 +127,9 @@ local function load_random_game(sample_idx, dataset, game, b)
         game = sgfloader.parse(content:storage():string(), filename)
         local max_moves = max_random_moves
         local max_can_move = game:num_round()-moveforward
-	if max_can_move < 0 then
-		max_can_move = 0
-	end
+        if max_can_move < 0 then
+		    max_can_move = 0
+	    end
         if max_moves > max_can_move and max_can_move >= 0 then
             max_moves = max_can_move
         end
@@ -137,10 +137,10 @@ local function load_random_game(sample_idx, dataset, game, b)
             min_random_moves = max_can_move
         end
         moveforward = moveforward + 1
-
-        if max_can_move == 0 and moveforward == 4 then
+        print(string.format("max_can_move:%d, moveforward:%d", max_can_move, moveforward))
+        if max_can_move <= 0 and moveforward == 4 then
                 return game, b, false
-	end
+	    end
 
         print(string.format("max_can_move: %d", max_can_move))
 
