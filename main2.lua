@@ -218,7 +218,9 @@ local function randomPlayAndGetFeature(sample_idx, dataset, info)
 
     game, b, ok = load_random_game(sample_idx, dataset, game, b)
 	if ok == false then
-        return torch.DoubleTensor(12,19,19), torch.LongTensor(1), torch.LongTensor(1, 2), 0
+        local retmove = torch.LongTensor(1)
+        retmove[1] = 0
+        return torch.DoubleTensor(12,19,19), retmove, torch.LongTensor(1, 2), 0
     end
 
     repeat
