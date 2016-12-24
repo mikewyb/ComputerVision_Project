@@ -74,7 +74,6 @@ function getModel(opt)
     model:add(ReLU(true))
     model:add(BatchNorm(384))
 
-
     model:add(Convolution(384, 1, 3, 3, 1, 1, 1))
     
     --output: 1x19x19
