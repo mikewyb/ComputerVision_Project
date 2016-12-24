@@ -37,7 +37,6 @@ local opt = pl.lapp[[
     --max_move            (default 50)
     --momentum            (default 0.9)
     --verbose             (default 'true')
-    --LR                  (default 0.1)
     --output              (default 'submission.csv')
     --logDir              (default 'logs')
 ]]
@@ -450,7 +449,7 @@ while epoch <= opt.nEpochs do
         optimMethod = optim.sgd,
         maxepoch = 1,
         config = {
-            learningRate = opt.LR,
+            learningRate = opt.alpha,
             momentum = opt.momentum
         }
     }
