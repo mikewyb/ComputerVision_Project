@@ -106,4 +106,6 @@ function modelGen.GetModel(inputdim, config)
 
 end
 
+return modelGen
+
 
