@@ -56,9 +56,6 @@ function getModel(opt)
     model:add(Convolution(384, 1, 3, 3, 1, 1, 1))
     
     --output: 1x19x19
-    
-    model:add(View(19*19))
-    
     return model
 end
 
